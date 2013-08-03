@@ -1,0 +1,13 @@
+/*
+Theme Name: Purple
+Template: twentytwelve
+Author: Chris Allen
+*/
+
+@import url("../twentytwelve/style.css");
+
+body.custom-background {
+	background-color: purple;
+}
+
+a { color: purple;}
