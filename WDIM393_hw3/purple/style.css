@@ -35,3 +35,5 @@ a { color: purple;}
 	color: #fff;
 	background: #8004e3;
 }
+
+.comment-meta.comment-author.vcard { display: none;}
