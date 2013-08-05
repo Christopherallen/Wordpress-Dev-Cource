@@ -15,6 +15,8 @@ a { color: purple;}
 .btn {
 	padding: 10px;
 	color: #8224e3;
+	background: #a660ef;
+	color: #fff;
 	text-decoration: none;
 	font-weight: bold;
 	box-shadow:
@@ -33,7 +35,7 @@ a { color: purple;}
 }
 .btn:hover {
 	color: #fff;
-	background: #8004e3;
+	background: #9547e7;
 }
 
 .comment-meta.comment-author.vcard { display: none;}

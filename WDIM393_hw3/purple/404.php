@@ -19,9 +19,9 @@ get_header(); ?>
 
 				<div class="entry-content">
 					<p><?php _e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help. ', 'twentytwelve' ); ?></p>
-					<p><a href=" " class="btn"><?php _e( 'Take me Home', 'twentytwelve' ); ?></a></p>
+					<p><a href="<?php echo home_url(); ?>" class="btn"><?php _e( 'Take me Home', 'twentytwelve' ); ?></a></p>
 
-					<p><?php _e( '<a href="http://forgifs.com" target="_blank"><img src="http://forgifs.com/gallery/d/153525-4/Black-kid-dancing.gif?" alt="forgifs.com" /></a> ', 'twentytwelve' ); ?></p>
+					<img src= "<?php echo get_stylesheet_directory_uri();?>/images/dance.gif" />
 					<?php get_search_form(); ?>
 				</div><!-- .entry-content -->
 			</article><!-- #post-0 -->
