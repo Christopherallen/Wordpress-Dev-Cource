@@ -1,0 +1,42 @@
+/*
+Theme Name: Purple
+Template: twentytwelve
+Author: Chris Allen
+*/
+
+@import url("../twentytwelve/style.css");
+
+body.custom-background {
+	background-color: purple;
+}
+
+.site { background-color: #ecdefd;}
+
+a { color: purple;}
+
+.btn {
+	padding: 10px;
+	color: #8224e3;
+	background: #a660ef;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+	box-shadow:
+	1px 0px 1px #8224e3,
+	0px 1px 1px #8224e3,
+	2px 1px 1px #8224e3,
+	1px 2px 1px #8224e3,
+	3px 2px 1px #8224e3,
+	2px 3px 1px #8224e3,
+	4px 3px 1px #8224e3,
+	3px 4px 1px #8224e3,
+	5px 4px 1px #8224e3,
+	4px 5px 1px #8224e3,
+	6px 5px 1px #8224e3;
+	
+}
+.btn:hover {
+	color: #fff;
+	background: #9547e7;
+}
+
