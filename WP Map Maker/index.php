@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP Map Maker
-Plugin URI: http://github.com/tollmanz/wordpress-development-course
+Plugin URI: https://github.com/Christopherallen/Wordpress-Dev-Cource
 Version: 1.0
 Description: Fully customizable maps intergrated into your wordpress theme
 Author: Chris Allen
