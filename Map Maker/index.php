@@ -11,7 +11,7 @@ License: GNU General Public License v2 or later
 ?>
 
 <style>
-	#map { min-height: 250px; }
+	#map { height: 250px; }
 </style>
 
 <?php
@@ -30,15 +30,6 @@ function map_maker_enqueue_style() {
 	wp_enqueue_style(
 	    'Map Box Styles',
 	    plugins_url( '//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css', __FILE__ ),
-	    array(),
-	    'all'
-	);
-}
-
-function map_maker_enqueue_style_internal() {
-	wp_enqueue_style(
-	    'Map Box Styles internal',
-	    plugins_url( 'css/style.css', __FILE__ ),
 	    array(),
 	    'all'
 	);
