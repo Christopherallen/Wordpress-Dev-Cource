@@ -37,6 +37,7 @@ add_action( 'add_meta_boxes', 'nsync_call_meta_box', 10, 2 );
  * @return void
  */
 function nsync_display_meta_box( $post, $args ) {
+    wp_nonce_field( plugins_url( __FILE__ ), 'nsync_plugin_noncename' );
 ?>
     <p>
         <label for="byeline">
@@ -63,6 +64,17 @@ function nsync_save_meta_box( $post_id, $post ) {
 
     $byeline = $_POST['byeline'];
     update_post_meta( $post_id, 'byebyebye-line', $byeline );
+
+    // Check the nonce to secure against CSRF
+    if ( isset( $_POST[ 'nsync_plugin_noncename' ] ) && wp_verify_nonce( $_POST[ 'nsync_plugin_noncename' ], plugins_url( __FILE__ ) ) ) {
+        if ( is_numeric( $_POST[ 'byeline' ] ) ) {
+            update_post_meta( $post_id, 'byeline', absint( $_POST[ 'byeline' ] ) );
+        } else {
+            delete_post_meta( $post_id, 'byeline' );
+        }
+    }
+
+    return;
 }
 
 add_action( 'save_post', 'nsync_save_meta_box', 10, 2 );
