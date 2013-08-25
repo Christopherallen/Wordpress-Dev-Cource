@@ -73,9 +73,9 @@ add_action( 'save_post', 'save_meta_box', 10, 2 );
  * @param  string    $content    The original content.
  * @return string                The altered content.
  */
-function print_byebyebye_line( $content ) {
+function display_byebyebye_line( $content ) {
     $byebyebye_line = get_post_meta( get_the_ID(), 'byebyebye-line', true );
     return $content . $byebyebye_line;
 }
 
-add_filter( 'the_content', 'print_byebyebye_line' );
+add_filter( 'the_content', 'display_byebyebye_line' );
