@@ -16,7 +16,7 @@ License:     GPLv2 or later
  * @param  object    $post         The current post object.
  * @return void
  */
-function call_meta_box( $post_type, $post ) {
+function nsync_call_meta_box( $post_type, $post ) {
     add_meta_box(
         'byebyebye_line',
         __( 'Bye Bye Bye Line', 'byebyebye_lines' ),
@@ -27,7 +27,7 @@ function call_meta_box( $post_type, $post ) {
     );
 }
 
-add_action( 'add_meta_boxes', 'call_meta_box', 10, 2 );
+add_action( 'add_meta_boxes', 'nsync_call_meta_box', 10, 2 );
 
 /**
  * Display the HTML for the metabox.
@@ -36,7 +36,7 @@ add_action( 'add_meta_boxes', 'call_meta_box', 10, 2 );
  * @param  array     $args    Additional arguments for the metabox.
  * @return void
  */
-function display_meta_box( $post, $args ) {
+function nsync_display_meta_box( $post, $args ) {
 ?>
     <p>
         <label for="byeline">
@@ -56,7 +56,7 @@ function display_meta_box( $post, $args ) {
  * @param  int       $post_id    The ID for the current post.
  * @param  object    $post       The current post object.
  */
-function save_meta_box( $post_id, $post ) {
+function nsync_save_meta_box( $post_id, $post ) {
     if ( ! isset( $_POST['byeline'] ) ) {
         return;
     }
@@ -65,7 +65,7 @@ function save_meta_box( $post_id, $post ) {
     update_post_meta( $post_id, 'byebyebye-line', $byeline );
 }
 
-add_action( 'save_post', 'save_meta_box', 10, 2 );
+add_action( 'save_post', 'nsync_save_meta_box', 10, 2 );
 
 /**
  * Append the Bye Bye Bye Line to the content.
@@ -73,9 +73,9 @@ add_action( 'save_post', 'save_meta_box', 10, 2 );
  * @param  string    $content    The original content.
  * @return string                The altered content.
  */
-function display_byebyebye_line( $content ) {
+function nsync_display_byebyebye_line( $content ) {
     $byebyebye_line = get_post_meta( get_the_ID(), 'byebyebye-line', true );
     return $content . $byebyebye_line;
 }
 
-add_filter( 'the_content', 'display_byebyebye_line' );
+add_filter( 'the_content', 'nsync_display_byebyebye_line' );
