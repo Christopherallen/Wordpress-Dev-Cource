@@ -58,13 +58,14 @@ function nsync_display_meta_box( $post, $args ) {
  * @param  object    $post       The current post object.
  */
 function nsync_save_meta_box( $post_id, $post ) {
+    
     if ( ! isset( $_POST['byeline'] ) ) {
         return;
     }
 
     $byeline = $_POST['byeline'];
     update_post_meta( $post_id, 'byebyebye-line', $byeline );
-
+    
     // Check the nonce to secure against CSRF
     if ( isset( $_POST[ 'nsync_plugin_noncename' ] ) && wp_verify_nonce( $_POST[ 'nsync_plugin_noncename' ], plugins_url( __FILE__ ) ) ) {
         if ( is_numeric( $_POST[ 'byeline' ] ) ) {
