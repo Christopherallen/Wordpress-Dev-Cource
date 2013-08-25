@@ -20,7 +20,7 @@ function nsync_call_meta_box( $post_type, $post ) {
     add_meta_box(
         'byebyebye_line',
         __( 'Bye Bye Bye Line', 'byebyebye_lines' ),
-        'display_meta_box',
+        'nsync_display_meta_box',
         'post',
         'side',
         'high'
@@ -78,4 +78,4 @@ function nsync_display_byebyebye_line( $content ) {
     return $content . $byebyebye_line;
 }
 
-add_filter( 'the_content', 'nsync_display_byebyebye_line' );
+add_filter( 'the_content', 'nsync_display_byebyebye_line', 40, 1 );
