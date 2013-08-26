@@ -43,7 +43,7 @@ function nsync_display_meta_box( $post, $args ) {
         <label for="byeline">
             <?php _e( 'Bye Bye Bye Line', 'byebyebye_lines' ); ?>:&nbsp;
         </label>
-        <input type="text" class="widefat" name="byeline" value="" />
+        <input type="text" class="widefat" name="byeline" value="<?php echo get_post_meta( $post->ID, 'byebyebye-line', true ); ?>" />
         <em>
             <?php _e( 'HTML is not allowed', 'byebyebye_lines' ); ?>
         </em>
@@ -59,19 +59,13 @@ function nsync_display_meta_box( $post, $args ) {
  */
 function nsync_save_meta_box( $post_id, $post ) {
     
-    if ( ! isset( $_POST['byeline'] ) ) {
-        return;
-    }
-
-    $byeline = $_POST['byeline'];
-    update_post_meta( $post_id, 'byebyebye-line', $byeline );
-    
     // Check the nonce to secure against CSRF
     if ( isset( $_POST[ 'nsync_plugin_noncename' ] ) && wp_verify_nonce( $_POST[ 'nsync_plugin_noncename' ], plugins_url( __FILE__ ) ) ) {
         if ( is_numeric( $_POST[ 'byeline' ] ) ) {
             update_post_meta( $post_id, 'byeline', absint( $_POST[ 'byeline' ] ) );
         } else {
-            delete_post_meta( $post_id, 'byeline' );
+            $byeline = $_POST['byeline'];
+            update_post_meta( $post_id, 'byebyebye-line', $byeline );
         }
     }
 
