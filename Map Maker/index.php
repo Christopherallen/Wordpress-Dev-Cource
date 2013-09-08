@@ -55,13 +55,12 @@ add_action( 'wp_enqueue_scripts', 'cpa_map_maker_enqueue_style' );
  * @return void
  */
 function cpa_map_add_custon_map( ) {
-  $mapID = get_option( 'map_custom_id' );
 
   ?>
      <div id="map"></div>
      <style> #map { height: 250px; } </style>
      <script type="text/javascript">
-      var map = L.mapbox.map("map", "<?php echo $mapID ?>")
+      var map = L.mapbox.map("map", "topher253.map-emb9xcho")
      </script>
    <?php  
      $content .= $button_html;
@@ -107,19 +106,37 @@ function cpa_map_render_options_page() {
         <?php screen_icon(); ?>
         <h2><?php _e( 'Welcome to Map Maker using <a href="http://www.mapbox.com/" target="_blank">MapBox</a>' ); ?></h2>
         <form action="options.php" method="post">
-            <?php settings_fields( 'map_custom_id' ); ?>
+            <?php settings_fields(  'marker_custom_settings' ); ?>
             <?php do_settings_sections( 'map_options_page' ); ?>
              <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
              <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
              <h3>Example of your map:</h3>
              <div id="map"></div>
-             <style> #map { height: 250px; width: 50%;} </style>
+             <style> #map { height: 150px; width: 50%;} </style>
              <script type="text/javascript">
-             <?php $mapID = get_option( 'map_custom_id' ); ?>
-                var map = L.mapbox.map("map", "<?php echo $mapID ?>")
+             <?php $markerlonLocation = get_option( 'marker_custom_lon' ); ?>
+             <?php $markerlatLocation = get_option( 'marker_custom_lat' ); ?>
+             <?php $mapID = get_option( 'marker_custom_hex' ); ?>
+                var map = L.mapbox.map("map", "topher253.map-emb9xcho")
+
+                  .setView([45.52, -122.68], 5);
+
+                var geoJson = [{
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [<?php echo $markerlonLocation ?>, <?php echo $markerlatLocation ?>]
+                    },
+                    properties: {
+                        title: 'Portland Fucking Oregon',
+                        // http://mapbox.com/developers/simplestyle/
+                        'marker-color': '#<?php echo $mapID ?>'
+                    }
+                }];
+                map.markerLayer.setGeoJSON(geoJson);
              </script>
              <p class="submit">
-                <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes' ); ?>">
+                <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Update Changes' ); ?>">
              </p>
         </form>
     </div>
@@ -134,11 +151,6 @@ function cpa_map_render_options_page() {
  * @return void
  */
 function cpa_customize_map_settings() {
-  register_setting(
-    'map_custom_id',
-    'map_custom_id'
-  );
-
   add_settings_section(
     'map_main_settings',
     __( 'Customize your map' ),
@@ -146,9 +158,40 @@ function cpa_customize_map_settings() {
     'map_options_page'
   );
 
+  register_setting(
+    'marker_custom_settings',
+    'marker_custom_lon'
+  );
+
   add_settings_field(
-    'map_custom_id_field',
-    __( 'Input your map id'),
+    'marker_custom_location_field',
+    __( 'Input marker Location:'),
+    'cpa_map_render_custom_marker_input',
+    'map_options_page',
+    'map_main_settings'
+  );
+
+  register_setting(
+    'marker_custom_settings',
+    'marker_custom_lat'
+  );
+
+  add_settings_field(
+    'marker_custom_location_lat_field',
+    __( ''),
+    'cpa_map_render_custom_marker_lat_input',
+    'map_options_page',
+    'map_main_settings'
+  );
+
+  register_setting(
+    'marker_custom_settings',
+    'marker_custom_hex'
+  );
+
+  add_settings_field(
+    'marker_custom_hex_field',
+    __( 'Input Marker Hex #:'),
     'cpa_map_render_custom_map_input',
     'map_options_page',
     'map_main_settings'
@@ -168,14 +211,40 @@ function cpa_map_render_main_settings_section() {
 }
 
 /**
- * Render the input for customization.
+ * Render the input for custom marker location.
+ *
+ * @since  1.0.
+ *
+ * @return void
+ */
+function cpa_map_render_custom_marker_input() {
+  $markerlonLocation = get_option( 'marker_custom_lon' );
+  echo '<label>Lon</label> <input name="marker_custom_lon"  type="text" value=" '. $markerlonLocation .' " />';
+}
+
+/**
+ * Render the input for custom marker location.
+ *
+ * @since  1.0.
+ *
+ * @return void
+ */
+function cpa_map_render_custom_marker_lat_input() {
+  $markerlatLocation = get_option( 'marker_custom_lat' );
+  echo '<label>Lon</label> <input name="marker_custom_lat"  type="text" value=" '. $markerlatLocation .' " />';
+}
+
+/**
+ * Render the input for custom marker color.
  *
  * @since  1.0.
  *
  * @return void
  */
 function cpa_map_render_custom_map_input() {
-  $mapID = get_option( 'map_custom_id' );
-  echo '<input name="map_custom_id"  type="text" value=" '. $mapID .' " />';
+  $mapID = get_option( 'marker_custom_hex');
+  echo '<input name="marker_custom_hex"  type="text" value=" '. $mapID .' " />';
 }
+
+
 
