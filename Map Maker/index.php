@@ -17,13 +17,6 @@ License: GNU General Public License v2 or later
  * @return void
  */
 
-add_action( 'admin_enqueue_scripts', 'mw_enqueue_color_picker' );
-function mw_enqueue_color_picker( $hook_suffix ) {
-    // first check that $hook_suffix is appropriate for your admin page
-    wp_enqueue_style( 'wp-color-picker' );
-    wp_enqueue_script( 'my-script-handle', plugins_url('my-script.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
-}
-
 function cpa_map_maker_enqueue_script() {
     wp_enqueue_script(
         'Map Box API',
@@ -56,6 +49,47 @@ function cpa_map_maker_enqueue_style() {
 add_action( 'wp_enqueue_scripts', 'cpa_map_maker_enqueue_style' );
 
 /**
+ * Print the necessary script in the footer.
+ *
+ * @since  1.0.
+ *
+ * @return void
+ */
+/* Map only works when script is inputed in the form
+function cpa_admin_map_maker_enqueue_script() {
+    wp_enqueue_script(
+        'Map Box API',
+        '//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js',
+        array(),
+        null,
+        true
+    );
+}
+
+add_action( 'admin_enqueue_scripts', 'cpa_admin_map_maker_enqueue_script' );
+/*
+
+/**
+ * Print the necessary script in the footer.
+ *
+ * @since  1.0.
+ *
+ * @return void
+ */
+function cpa_admin_map_maker_enqueue_style() {
+  wp_enqueue_style(
+      'admin scripts',
+      '//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css',
+      array(),
+      '1.54',
+      'all'
+  );
+}
+
+add_action( 'admin_enqueue_scripts', 'cpa_map_maker_enqueue_style' );
+
+
+/**
  * Add the configuration script to enable the map.
  *
  * @since  1.0.
@@ -68,13 +102,14 @@ function cpa_map_add_custon_map( ) {
      <div id="map"></div>
        <style> #map { height: 150px;} </style>
        <script type="text/javascript">
+       <?php $mapStyle = get_option( 'marker_custom_map_temp' ); ?>
        <?php $mapZoom = get_option( 'marker_custom_zoom', 3 ); ?>
        <?php $markerlonLocation = get_option( 'marker_custom_lon' ); ?>
        <?php $markerlatLocation = get_option( 'marker_custom_lat' ); ?>
        <?php $mapID = get_option( 'marker_custom_hex' ); ?>
        <?php $markerTitle = get_option( 'marker_custom_title'); ?>
        <?php $markerDescription = get_option( 'marker_custom_description'); ?>
-          var map = L.mapbox.map("map", "topher253.map-emb9xcho")
+          var map = L.mapbox.map("map", "<?php echo $mapStyle ?>")
 
             .setView([<?php echo $markerlatLocation ?>,<?php echo $markerlonLocation ?> ], <?php echo $mapZoom ?>);
 
@@ -137,18 +172,18 @@ function cpa_map_render_options_page() {
             <?php settings_fields(  'marker_custom_settings' ); ?>
             <?php do_settings_sections( 'map_options_page' ); ?>
              <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
-             <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
              <h3>Example of your map:</h3>
              <div id="map"></div>
              <style> #map { height: 150px; width: 50%;} </style>
              <script type="text/javascript">
+             <?php $mapStyle = get_option( 'marker_custom_map_temp' ); ?>
              <?php $mapZoom = get_option( 'marker_custom_zoom', 3 ); ?>
              <?php $markerlonLocation = get_option( 'marker_custom_lon' ); ?>
              <?php $markerlatLocation = get_option( 'marker_custom_lat' ); ?>
              <?php $mapID = get_option( 'marker_custom_hex'); ?>
              <?php $markerTitle = get_option( 'marker_custom_title'); ?>
              <?php $markerDescription = get_option( 'marker_custom_description'); ?>
-                var map = L.mapbox.map("map", "topher253.map-emb9xcho")
+                var map = L.mapbox.map("map", "<?php echo $mapStyle ?>")
 
                   .setView([<?php echo $markerlatLocation ?>,<?php echo $markerlonLocation ?> ], <?php echo $mapZoom ?>);
 
@@ -193,6 +228,19 @@ function cpa_customize_map_settings() {
 
   register_setting(
     'marker_custom_settings',
+    'marker_custom_map_temp'
+  );
+
+  add_settings_field(
+    'marker_custom_map_tem_field',
+    __( 'Select a map style:'),
+    'cpa_map_render_map_temp_input',
+    'map_options_page',
+    'map_main_settings'
+  );
+
+  register_setting(
+    'marker_custom_settings',
     'marker_custom_zoom'
   );
 
@@ -211,7 +259,7 @@ function cpa_customize_map_settings() {
 
   add_settings_field(
     'marker_custom_location_lat_field',
-    __( ''),
+    __( 'Marker Location:'),
     'cpa_map_render_custom_marker_lat_input',
     'map_options_page',
     'map_main_settings'
@@ -224,7 +272,7 @@ function cpa_customize_map_settings() {
 
   add_settings_field(
     'marker_custom_location_field',
-    __( 'Marker Location:'),
+    __( ''),
     'cpa_map_render_custom_marker_input',
     'map_options_page',
     'map_main_settings'
@@ -272,6 +320,18 @@ function cpa_customize_map_settings() {
 }
 add_action ('admin_init', 'cpa_customize_map_settings');
 
+function cpa_map_render_map_temp_input() {
+  $mapStyle = get_option( 'marker_custom_map_temp' );
+?>
+  <select name="marker_custom_map_temp">
+    <option value="topher253.map-emb9xcho" <?php selected( 'topher253.map-emb9xcho', $mapStyle ); ?>>Landscape</option>
+    <option value="topher253.map-im1c3fmw" <?php selected( 'topher253.map-im1c3fmw', $mapStyle ); ?>>Light Grey</option>
+    <option value="topher253.map-3ghxnwjd" <?php selected( 'topher253.map-3ghxnwjd', $mapStyle ); ?>>Navy Blue / Yellow</option>
+     <option value="topher253.map-r4wmco1s" <?php selected( 'topher253.map-r4wmco1s', $mapStyle ); ?>>Green</option>
+  </select>
+<?php
+}
+
 /**
  * Render text instructions for customization.
  *
@@ -283,6 +343,7 @@ function cpa_map_render_main_settings_section() {
     echo '<p>Need help figuring out your longitude and latitude? Visit <a href="http://www.geo-tag.de/generator/en.html" target="_blank">Geo Tag Generator.</a></p>';
     echo '<hr />';
 }
+
 
 function cpa_map_render_zoom_input() {
   $mapZoom = get_option( 'marker_custom_zoom', 3 );
@@ -296,6 +357,7 @@ function cpa_map_render_zoom_input() {
   </select>
 <?php
 }
+
 /**
  * Render the input for custom marker location.
  *
@@ -328,11 +390,8 @@ function cpa_map_render_custom_marker_lat_input() {
  * @return void
  */
 function cpa_map_render_custom_map_input() {
-
   $mapID = get_option( 'marker_custom_hex' );
-  ?>
-  <input name="marker_custom_hex"  type="text" value="d50f25<?php checked( $mapID, false);?>"  />
-  <?php
+  echo '<input name="marker_custom_hex"  type="text" value=" '. $mapID .' " />';
 }
 
 /**
@@ -356,5 +415,5 @@ function cpa_map_render_marker_title_input() {
  */
 function cpa_map_render_marker_description_input() {
   $markerDescription = get_option( 'marker_custom_description');
-  echo '<textarea name="marker_custom_description"   value=" '. $markerDescription .' " ></textarea>';
+  echo '<input name="marker_custom_description" type="text"   value=" '. $markerDescription .' " >';
 }
